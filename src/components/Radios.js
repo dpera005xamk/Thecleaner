@@ -14,7 +14,7 @@ function Radios( {convert, mode, setFormat} ) {
       <input type= "radio" name= "formats" value= "json"/>
       <label>json</label> <br/>
 
-      <input type= "radio" name= "formats" value= "csv"/>
+      <input type= "radio" name= "formats" value= "csv" disabled= {true}/>
       <label>csv</label> <br/>
 
 

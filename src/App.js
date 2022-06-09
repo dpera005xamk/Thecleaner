@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import Inputs from './components/Inputs';
+import Fields from './components/Fields';
 
 function App() {
-  const [inputted, setInputted] = useState('');
   const [results, setResults] = useState('');
   const [format, setFormat] = useState();
+  const [message, setMessage] = useState('');
 
   const convert = (e) => {
     e.preventDefault();
@@ -13,6 +14,7 @@ function App() {
     if (format === 'json') {
       if (typeof(results) === 'string') {
         console.log('stringi');
+        setResults(JSON.parse(JSON.stringify(inputs)));
       } else {
         console.log('not string');
       }
@@ -38,7 +40,12 @@ function App() {
   return (
     <div>
 
-      {/* ylhäällä*/}
+      {/* top */}
+
+      <p>
+        {message}
+      </p>
+
       <Inputs
         convert= {convert}
         mode= "radios"
@@ -47,7 +54,7 @@ function App() {
 
       <div style= {{display: "flex"}}>
 
-        {/* vasen laita*/}
+        {/* left side */}
         <div style= {{flex: 1}}>
 
           {
@@ -62,11 +69,22 @@ function App() {
         </div>
 
 
-        {/* oikea laita */}
+        {/* right side */}
         <div style= {{flex: 1}}>
+
+          <div>
+            {/* generate found object here */}
+            <Fields
+              format= {format}
+              results= {results}
+              setMessage= {setMessage}
+              />
+          </div>
+
           <p id= "results">
             {results}
           </p>
+
         </div>
 
       </div>
