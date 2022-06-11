@@ -22,6 +22,9 @@ if ('key' in x) {
         const foundObject = JSON.parse(results);
         setMessage('json detected');
         setFoundJson(foundObject);
+        console.log('fO: ', foundObject);
+      //  Object.keys(foundObject).forEach((prop)=> console.log(prop));
+      // https://tutorial.tips/how-to-print-all-the-properties-of-the-object-in-javascript/
       }
       catch (e) {
         setMessage('data not json');
@@ -32,9 +35,9 @@ if ('key' in x) {
   }, [results]);
 
   return(
-    (results !== '') ?
+    (foundJson !== '') ?
     <div>
-      {results}
+      ok
     </div> :
     <></>
   );
