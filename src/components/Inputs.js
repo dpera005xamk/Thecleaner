@@ -2,14 +2,14 @@ import { React } from 'react';
 import Texts from './Texts';
 import Radios from './Radios';
 
-function Inputs( {convert, mode, format, setFormat} ) {
+function Inputs( {receiveInput, mode, format, setFormat} ) {
 
   if (mode === "texts") {
     return(
       <div>
 
         <Texts
-          convert= {convert}
+          receiveInput= {receiveInput}
           format= {format}
           />
 
@@ -22,7 +22,6 @@ function Inputs( {convert, mode, format, setFormat} ) {
       <div>
 
         <Radios
-          convert= {convert}
           setFormat= {setFormat}
           />
 

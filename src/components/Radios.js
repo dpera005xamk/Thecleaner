@@ -1,6 +1,6 @@
 import { React } from 'react';
 
-function Radios( {convert, mode, setFormat} ) {
+function Radios( {mode, setFormat} ) {
 
   return(
     <form onChange = { (e) => {

@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from 'react';
 
-function Fields( {rawData, format, setMessage, setElements} ) {
+function Fields( {rawData, setRawData, format, setMessage, setElements} ) {
   const [foundJson, setFoundJson] = useState('');
 
 /*
@@ -30,6 +30,8 @@ if ('key' in x) {
           elementObjects.push(newOne);
         });
         setElements(elementObjects);
+        console.log('f-O 2 ', foundObject[1]);
+      //  setRawData(foundObject);
       }
       catch (e) {
         setMessage('data not json');

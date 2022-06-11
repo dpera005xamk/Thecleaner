@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Inputs from './components/Inputs';
 import Fields from './components/Fields';
 import Element from './components/Element';
@@ -9,17 +9,51 @@ function App() {
   const [message, setMessage] = useState('');
   const [elements, setElements] = useState([]);
 
-  // converts inputted data
-  const convert = (e) => {
+  // if elements changes, change the rawData
+  useEffect( () => {
+    /*
+    Object.keys(foundObject[0]).forEach((item, i) => {
+      const newOne = {id: i, name: item, show: true};
+      elementObjects.push(newOne);
+    });
+    */
+    console.log('rawData, elements change');
+    /* jatka tästä, tämä ei toimi....*/
+    if (elements.length > 0) {
+      const parsed = JSON.parse(rawData);
+      setRawData(rawData.map( (entry) => {
+        // check all keys of entry
+        Object.keys(entry).forEach((item, i) => {
+          // find same key from elements (there should be all)
+          elements.forEach((item2, j) => {
+            if (item === item2.name) {
+              // found the key
+              console.log('key found ', item);
+              // if this is marked as red, delete the it
+              if (!item2.shows) {
+                console.log('props is false, deleting', item);
+                delete entry[item];
+              }
+            }
+          });
+        });
+        // return the entry
+        return entry;
+      }));
+    }
+
+  }, [elements]);
+
+  // receiveInputs inputted data
+  const receiveInput = (e) => {
     e.preventDefault();
     const inputs = e.target.value;
 
     if (format === 'json') {
       if (typeof(rawData) === 'string') {
-        console.log('stringi');
         setRawData(JSON.parse(JSON.stringify(inputs)));
       } else {
-        console.log('not string');
+        setMessage('not JSON.');
       }
     //  setRawData(JSON.parse(JSON.stringify(inputs)));
     }
@@ -33,7 +67,7 @@ function App() {
     }
 
     else {
-      setRawData('no format selected...');
+      setMessage('no format selected...');
     }
 
   };
@@ -60,7 +94,7 @@ function App() {
       </p>
 
       <Inputs
-        convert= {convert}
+        receiveInput= {receiveInput}
         mode= "radios"
         setFormat = {setFormat}
         />
@@ -73,7 +107,7 @@ function App() {
           { /* text area to input json or csv */
             format ?
               <Inputs
-                convert= {convert}
+                receiveInput= {receiveInput}
                 mode= "texts"
                 format= {format}
               /> :
@@ -106,13 +140,14 @@ function App() {
             <Fields
               format= {format}
               rawData= {rawData}
+              setRawData= {setRawData}
               setMessage= {setMessage}
               setElements= {setElements}
               />
           </div>
 
           <p id= "rawData">
-            raaka data:
+            Data:
             <br/>
             {rawData}
           </p>

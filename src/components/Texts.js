@@ -1,6 +1,6 @@
 import { React } from 'react';
 
-function Texts( {convert, format} ) {
+function Texts( {receiveInput, format} ) {
 
   return(
     <div>
@@ -10,7 +10,7 @@ function Texts( {convert, format} ) {
       </p>
 
       <textarea id= "jsonInput"
-                onChange={convert}
+                onChange={receiveInput}
                 rows= "10"
                 columns= "50">
       </textarea>
