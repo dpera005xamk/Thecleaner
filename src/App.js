@@ -11,27 +11,17 @@ function App() {
 
   // if elements changes, change the rawData
   useEffect( () => {
-    /*
-    Object.keys(foundObject[0]).forEach((item, i) => {
-      const newOne = {id: i, name: item, show: true};
-      elementObjects.push(newOne);
-    });
-    */
-    console.log('rawData, elements change');
-    /* jatka tästä, tämä ei toimi....*/
     if (elements.length > 0) {
       const parsed = JSON.parse(rawData);
-      setRawData(rawData.map( (entry) => {
+      const fixed = parsed.map( (entry) => {
         // check all keys of entry
         Object.keys(entry).forEach((item, i) => {
           // find same key from elements (there should be all)
           elements.forEach((item2, j) => {
             if (item === item2.name) {
               // found the key
-              console.log('key found ', item);
               // if this is marked as red, delete the it
-              if (!item2.shows) {
-                console.log('props is false, deleting', item);
+              if (!item2.show) {
                 delete entry[item];
               }
             }
@@ -39,7 +29,11 @@ function App() {
         });
         // return the entry
         return entry;
-      }));
+      });
+      // tästä jatketaan, sitten pitäisi varmaan tallettaa tämä rawDataan
+      // voi olla, että menee suoraan, mutta ehkä pitää muuttaa stringiksi
+      console.log('fixed: ', fixed);
+
     }
 
   }, [elements]);
