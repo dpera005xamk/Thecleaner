@@ -1,41 +1,54 @@
 import { useState } from 'react';
 import Inputs from './components/Inputs';
 import Fields from './components/Fields';
+import Element from './components/Element';
 
 function App() {
-  const [results, setResults] = useState('');
+  const [rawData, setRawData] = useState('');
   const [format, setFormat] = useState();
   const [message, setMessage] = useState('');
+  const [elements, setElements] = useState([]);
 
+  // converts inputted data
   const convert = (e) => {
     e.preventDefault();
     const inputs = e.target.value;
 
     if (format === 'json') {
-      if (typeof(results) === 'string') {
+      if (typeof(rawData) === 'string') {
         console.log('stringi');
-        setResults(JSON.parse(JSON.stringify(inputs)));
+        setRawData(JSON.parse(JSON.stringify(inputs)));
       } else {
         console.log('not string');
       }
-    //  setResults(JSON.parse(JSON.stringify(inputs)));
+    //  setRawData(JSON.parse(JSON.stringify(inputs)));
     }
 
     else if (format === 'csv') {
 
+        /*
+        csv to json
+        https://stackoverflow.com/questions/27979002/convert-csv-data-into-json-format-using-javascript
+        */
     }
 
     else {
-      setResults('no format selected...');
+      setRawData('no format selected...');
     }
 
   };
 
-  /*
-  csv to json
-  https://stackoverflow.com/questions/27979002/convert-csv-data-into-json-format-using-javascript
-  */
-
+  // changes value of property
+  const switchValue = (id) => {
+    setElements(elements.map( (ele) => {
+      if (id === ele.id) {
+        ele.show = !ele.show;
+        return ele;
+      } else {
+        return ele;
+      }
+    }))
+  }
 
   return (
     <div>
@@ -57,7 +70,7 @@ function App() {
         {/* left side */}
         <div style= {{flex: 1}}>
 
-          {
+          { /* text area to input json or csv */
             format ?
               <Inputs
                 convert= {convert}
@@ -65,6 +78,22 @@ function App() {
                 format= {format}
               /> :
               <></>
+          }
+
+          <p>
+            valitse kentät klikkaamalla, vihreät näkyy, punaiset ei
+          </p>
+
+          { /* shows elements, that are in inputted data */
+            elements.map( (ele, i) => {
+              return(
+                <div key= {i}>
+                  <Element
+                    ele= {ele}
+                    switchValue= {switchValue} />
+                </div>
+              )
+            })
           }
         </div>
 
@@ -76,15 +105,16 @@ function App() {
             {/* generate found object here */}
             <Fields
               format= {format}
-              results= {results}
+              rawData= {rawData}
               setMessage= {setMessage}
+              setElements= {setElements}
               />
           </div>
 
-          <p id= "results">
+          <p id= "rawData">
             raaka data:
             <br/>
-            {results}
+            {rawData}
           </p>
 
         </div>

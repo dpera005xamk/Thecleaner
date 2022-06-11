@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from 'react';
 
-function Fields( {results, format, setMessage} ) {
+function Fields( {rawData, format, setMessage, setElements} ) {
   const [foundJson, setFoundJson] = useState('');
 
 /*
@@ -19,12 +19,17 @@ if ('key' in x) {
 
       // got json, lets see if it really is what is says it is
       try {
-        const foundObject = JSON.parse(results);
+        const foundObject = JSON.parse(rawData);
         setMessage('json detected');
         setFoundJson(foundObject);
-        console.log('fO: ', foundObject);
-      //  Object.keys(foundObject).forEach((prop)=> console.log(prop));
-      // https://tutorial.tips/how-to-print-all-the-properties-of-the-object-in-javascript/
+
+        // lets save names of properties with boolean
+        const elementObjects = [];
+        Object.keys(foundObject[0]).forEach((item, i) => {
+          const newOne = {id: i, name: item, show: true};
+          elementObjects.push(newOne);
+        });
+        setElements(elementObjects);
       }
       catch (e) {
         setMessage('data not json');
@@ -32,7 +37,7 @@ if ('key' in x) {
       }
 
     }
-  }, [results]);
+  }, [rawData]);
 
   return(
     (foundJson !== '') ?
