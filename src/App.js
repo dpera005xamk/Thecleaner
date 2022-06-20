@@ -53,7 +53,27 @@ function App() {
   // to only street name
   const sanitateToName = () => {
 
-  }
+    // https://www.w3schools.com/jsref/jsref_obj_regexp.asp
+
+    const fixed = parsed.map( (entry) => {
+      // check all keys of entry
+      Object.keys(entry).forEach((item, i) => {
+        // find same key from elements (there should be all)
+        elements.forEach((item2, j) => {
+          if (item === item2.name) { // if on street name etc...
+            // found the key
+            // if this is marked as red, delete the it
+            if (!item2.show) { // sit modataan sitä sopivaksi 
+              delete entry[item];
+            }
+          }
+        });
+      });
+      // return the entry
+      return entry;
+    });
+    x
+  };
 
   // sanitate the street address
   // to only streetname + first number
