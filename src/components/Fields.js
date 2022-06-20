@@ -3,16 +3,6 @@ import { React, useEffect, useState } from 'react';
 function Fields( {rawData, setRawData, format, setMessage, setElements} ) {
   const [foundJson, setFoundJson] = useState('');
 
-/*
-var x = {
-  'key': 1
-};
-
-if ('key' in x) {
-  console.log('has');
-}
-*/
-
   useEffect( () => {
 
     if (format === 'json') {
@@ -35,7 +25,8 @@ if ('key' in x) {
       }
       catch (e) {
         setMessage('data not json');
-        // The JSON was invalid, `e` has some further information
+        console.log('not JSON, ', e);
+        // The JSON was invalid
       }
 
     }

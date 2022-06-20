@@ -8,6 +8,7 @@ function App() {
   const [format, setFormat] = useState();
   const [message, setMessage] = useState('');
   const [elements, setElements] = useState([]);
+  const [buttonsDisabled, setButtonsDisabled] = useState(true);
 
   // if elements changes, change the rawData
   useEffect( () => {
@@ -42,15 +43,41 @@ function App() {
         // return the entry
         return entry;
       });
-      // tästä jatketaan, sitten pitäisi varmaan tallettaa tämä rawDataan
-      // voi olla, että menee suoraan, mutta ehkä pitää muuttaa stringiksi
-      console.log('fixed: ', fixed);
+      setButtonsDisabled(false);
       setRawData(fixed);
-      console.log('fixed 0, fixed 1 ', fixed[0], fixed[1]);
-
     }
 
   }, [elements]);
+
+  // sanitate the street address
+  // to only street name
+  const sanitateToName = () => {
+
+  }
+
+  // sanitate the street address
+  // to only streetname + first number
+  const sanitateToNameNumber = () => {
+
+  }
+
+  // stringify the rawData and add to clipBoard
+  const toClipBoardJson = () => {
+  // navigator.clipboard.writeText(copyText.value);
+    navigator.clipboard.writeText(JSON.stringify(rawData));
+  }
+
+  // converts to CSV and copies to clipBoard
+  const toClipBoardCsv = () => {
+    //const stringifiedRawData = JSON.stringify(rawData);
+    let csvData = Object.keys(rawData[0]).join(',') + '\n';
+
+    rawData.forEach( (jsonRecord) => {
+     csvData += Object.values(jsonRecord).join(',') + '\n';
+    });
+
+    navigator.clipboard.writeText(csvData);
+  }
 
   // receiveInputs inputted data
   const receiveInput = (e) => {
@@ -121,6 +148,38 @@ function App() {
               /> :
               <></>
           }
+
+          <p>
+            <button
+              onClick= {sanitateToName}
+              disabled= {buttonsDisabled}>
+                osoitteet muotoon "kadunnimi"
+              </button>
+          </p>
+
+          <p>
+            <button
+              onClick= {sanitateToNameNumber}
+              disabled= {buttonsDisabled}>
+                osoitteet muotoon "kadunnimi numero"
+              </button>
+          </p>
+
+          <p>
+            <button
+              onClick= {toClipBoardJson}
+              disabled= {buttonsDisabled}>
+                kopioi materiaali JSON-muotoon clipboardille
+            </button>
+          </p>
+
+          <p>
+            <button
+              onClick= {toClipBoardCsv}
+              disabled= {buttonsDisabled}>
+                kopioi materiaali CSV-muotoon clipboardille
+            </button>
+          </p>
 
           <p>
             klikkaa kenttien nimiä, mitkä poistetaan
