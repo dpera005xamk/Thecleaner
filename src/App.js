@@ -12,7 +12,19 @@ function App() {
   // if elements changes, change the rawData
   useEffect( () => {
     if (elements.length > 0) {
-      const parsed = JSON.parse(rawData);
+      let parsed = null;
+
+      try {
+        // if not parsed yet
+        parsed = JSON.parse(rawData);
+      }
+
+      catch(e) {
+        // already parsed
+        parsed = rawData;
+        console.log('could not parse', rawData);
+      }
+
       const fixed = parsed.map( (entry) => {
         // check all keys of entry
         Object.keys(entry).forEach((item, i) => {
@@ -33,6 +45,8 @@ function App() {
       // tästä jatketaan, sitten pitäisi varmaan tallettaa tämä rawDataan
       // voi olla, että menee suoraan, mutta ehkä pitää muuttaa stringiksi
       console.log('fixed: ', fixed);
+      setRawData(fixed);
+      console.log('fixed 0, fixed 1 ', fixed[0], fixed[1]);
 
     }
 
@@ -109,7 +123,7 @@ function App() {
           }
 
           <p>
-            valitse kentät klikkaamalla, vihreät näkyy, punaiset ei
+            klikkaa kenttien nimiä, mitkä poistetaan
           </p>
 
           { /* shows elements, that are in inputted data */
@@ -139,12 +153,31 @@ function App() {
               setElements= {setElements}
               />
           </div>
-
+{/*
           <p id= "rawData">
             Data:
             <br/>
             {rawData}
           </p>
+*/}
+          <div id= "rawData">
+            Data:
+            <br/>
+
+              {
+
+                (typeof(rawData) === 'object') ?
+                  rawData.map( (item, i) => {
+                  return(
+                    <p key= {i}>
+                      {JSON.stringify(item)}
+                    </p>
+                    )
+                  }):
+                <></>
+
+              }
+          </div>
 
         </div>
 
