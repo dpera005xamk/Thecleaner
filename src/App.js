@@ -62,10 +62,12 @@ function App() {
     // delete from "street"  property all numbers
 
     // then maybe delete that door indicator, if has...
+      // like: if last is " a " then delete it..
+      // this should also fix those who have write
 
     // that should be it...
 
-    
+
 /*
     const fixed = parsed.map( (entry) => {
       // check all keys of entry
