@@ -55,6 +55,18 @@ function App() {
 
     // https://www.w3schools.com/jsref/jsref_obj_regexp.asp
 
+    // should be already parsed at this point...
+
+    // map/foreach all
+
+    // delete from "street"  property all numbers
+
+    // then maybe delete that door indicator, if has...
+
+    // that should be it...
+
+    
+/*
     const fixed = parsed.map( (entry) => {
       // check all keys of entry
       Object.keys(entry).forEach((item, i) => {
@@ -63,7 +75,7 @@ function App() {
           if (item === item2.name) { // if on street name etc...
             // found the key
             // if this is marked as red, delete the it
-            if (!item2.show) { // sit modataan sitä sopivaksi 
+            if (!item2.show) { // sit modataan sitä sopivaksi
               delete entry[item];
             }
           }
@@ -72,7 +84,7 @@ function App() {
       // return the entry
       return entry;
     });
-    x
+  */
   };
 
   // sanitate the street address
