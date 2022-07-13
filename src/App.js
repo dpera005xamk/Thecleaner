@@ -82,6 +82,33 @@ function App() {
   // https://www.w3schools.com/jsref/jsref_obj_regexp.asp
   const sanitateToNameNumber = () => {
 
+
+    // if buildingType === Kerrostalo
+    // then should leave the street number
+    // in other cases, remove all numbers
+    const fixed = rawData.map( (entry, i) => {  
+
+      // all numbers,           
+      let sanitated = entry.street.replace(/[0-9]/g, '');
+
+      // any single digit left there
+      sanitated = sanitated.replace(/\s.\s/g, '');
+
+      // if last digits is leftower digit from sanitated door
+      // as might still be after last replace from xYx cases
+      if (sanitated[sanitated.length-2] == ' ') {
+        sanitated = sanitated.replace(/.$/, '');
+      } 
+
+      // empty spaces from end
+      sanitated = sanitated.replace(/\s+$/g, '');
+
+      entry.street = sanitated;
+      return entry;
+    });
+
+    setRawData(fixed);
+
   }
 
   // stringify the rawData and add to clipBoard
