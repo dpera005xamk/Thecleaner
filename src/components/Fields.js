@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from 'react';
 
-function Fields( {rawData, setRawData, format, setMessage, setElements} ) {
+function Fields( {rawData, format, setMessage, setElements} ) {
   const [foundJson, setFoundJson] = useState('');
 
   useEffect( () => {
@@ -29,6 +29,8 @@ function Fields( {rawData, setRawData, format, setMessage, setElements} ) {
         // The JSON was invalid
       }
 
+    } else {
+      console.log('not json. got: ', rawData);
     }
   }, [rawData]);
 

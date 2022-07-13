@@ -50,47 +50,36 @@ function App() {
   }, [elements]);
 
   // sanitate the street address
-  // to only street name
+  // to only street name (removes numbers and door indicators)
   const sanitateToName = () => {
 
-    // https://www.w3schools.com/jsref/jsref_obj_regexp.asp
+    const fixed = rawData.map( (entry, i) => {  
 
-    // should be already parsed at this point...
+      // all numbers,           
+      let sanitated = entry.street.replace(/[0-9]/g, '');
 
-    // map/foreach all
+      // any single digit left there
+      sanitated = sanitated.replace(/\s.\s/g, '');
 
-    // delete from "street"  property all numbers
+      // if last digits is leftower digit from sanitated door
+      // as might still be after last replace from xYx cases
+      if (sanitated[sanitated.length-2] == ' ') {
+        sanitated = sanitated.replace(/.$/, '');
+      } 
 
-    // then maybe delete that door indicator, if has...
-      // like: if last is " a " then delete it..
-      // this should also fix those who have write
+      // empty spaces from end
+      sanitated = sanitated.replace(/\s+$/g, '');
 
-    // that should be it...
-
-
-/*
-    const fixed = parsed.map( (entry) => {
-      // check all keys of entry
-      Object.keys(entry).forEach((item, i) => {
-        // find same key from elements (there should be all)
-        elements.forEach((item2, j) => {
-          if (item === item2.name) { // if on street name etc...
-            // found the key
-            // if this is marked as red, delete the it
-            if (!item2.show) { // sit modataan sitä sopivaksi
-              delete entry[item];
-            }
-          }
-        });
-      });
-      // return the entry
+      entry.street = sanitated;
       return entry;
     });
-  */
+
+    setRawData(fixed);
   };
 
   // sanitate the street address
   // to only streetname + first number
+  // https://www.w3schools.com/jsref/jsref_obj_regexp.asp
   const sanitateToNameNumber = () => {
 
   }
