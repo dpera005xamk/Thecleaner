@@ -51,11 +51,13 @@ function App() {
 
   // sanitate the street address
   // to only street name (removes numbers and door indicators)
+  // third so that handles Kerrostalo, Rivitalo, Omakotitalo differently
+  // other values: Erillistalo, Paritalo, Puutalo-osake, Muu 
   const sanitateToName = () => {
 
-    const fixed = rawData.map( (entry, i) => {  
+    const fixed = rawData.map( (entry, i) => {
 
-      // all numbers,           
+      // all numbers,
       let sanitated = entry.street.replace(/[0-9]/g, '');
 
       // any single digit left there
@@ -65,7 +67,7 @@ function App() {
       // as might still be after last replace from xYx cases
       if (sanitated[sanitated.length-2] == ' ') {
         sanitated = sanitated.replace(/.$/, '');
-      } 
+      }
 
       // empty spaces from end
       sanitated = sanitated.replace(/\s+$/g, '');
@@ -86,9 +88,9 @@ function App() {
     // if buildingType === Kerrostalo
     // then should leave the street number
     // in other cases, remove all numbers
-    const fixed = rawData.map( (entry, i) => {  
+    const fixed = rawData.map( (entry, i) => {
 
-      // all numbers,           
+      // all numbers,
       let sanitated = entry.street.replace(/[0-9]/g, '');
 
       // any single digit left there
@@ -98,7 +100,7 @@ function App() {
       // as might still be after last replace from xYx cases
       if (sanitated[sanitated.length-2] == ' ') {
         sanitated = sanitated.replace(/.$/, '');
-      } 
+      }
 
       // empty spaces from end
       sanitated = sanitated.replace(/\s+$/g, '');
