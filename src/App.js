@@ -9,6 +9,9 @@ function App() {
   const [message, setMessage] = useState('');
   const [elements, setElements] = useState([]);
   const [buttonsDisabled, setButtonsDisabled] = useState(true);
+  // street sanitator below
+  const [streetData, setStreetdata] = useState('')
+  const [sanitatedStreets, setSanitatedStreets] = useState('');
 
   // if elements changes, change the rawData
   useEffect( () => {
@@ -52,7 +55,7 @@ function App() {
   // sanitate the street address
   // to only street name (removes numbers and door indicators)
   // third so that handles Kerrostalo, Rivitalo, Omakotitalo differently
-  // other values: Erillistalo, Paritalo, Puutalo-osake, Muu 
+  // other values: Erillistalo, Paritalo, Puutalo-osake, Muu
   const sanitateToName = () => {
 
     const fixed = rawData.map( (entry, i) => {
@@ -130,6 +133,91 @@ function App() {
 
     navigator.clipboard.writeText(csvData);
   }
+
+  // receiveStreets
+  const receiveStreets = (e) => {
+    e.preventDefault();
+    const inputs = e.target.value;
+    setStreetdata(e.target.value)
+    const splitted = inputs.split(/\r?\n/);
+    console.log('splitted ', splitted);
+    //console.log('streetData: ', streetData);
+    const getSanitated = sanitateStreetsOfStreetData(splitted);
+    navigator.clipboard.writeText(getSanitated);
+    setSanitatedStreets(getSanitated)
+  //  console.log('type: ', typeof(inputs));
+
+  }
+
+const sanitateStreetsOfStreetData = (values) => {
+    console.log('streetdata found', values);
+    //console.log('streetData ', streetData );
+    /*
+    var str = values;
+    var i = 0;
+    for (;i < str.length; i++) {
+      if (str[i] === '\n' || str[i] === '\r') {
+        console.log('found enter key')
+      };
+    };
+    */
+  console.log('values 0 ', values[0]);
+  console.log('values 1 ', values[1]);
+    /*
+    const fixed = values.foreach((item, i) => {
+      item.replace(
+        // replace numbers
+        /[0-9]/g, ''
+      ).replace(
+        // any single digit
+        /\s.\s/g, ''
+      ).replace(
+        // if last digits is leftower digit from sanitated door
+        // as might still be after last replace from xYx cases
+        /.$/, ''
+      )
+    });
+    */
+    /*
+    const fixed = values.replace(
+      // replace numbers
+      /[0-9]/g, ''
+    ).replace(
+      // any single digit
+      /\s.\s/g, ''
+    ).replace(
+      // if last digits is leftower digit from sanitated door
+      // as might still be after last replace from xYx cases
+      /.$/, ''
+    )
+    ;
+*/
+  const fixed = values.map( (entry, i) => {
+
+    // all numbers,
+    let sanitated = entry.replace(/[0-9]/g, '');
+
+    // any single digit left there
+    sanitated = sanitated.replace(/\s.\s/g, '');
+
+    // if last digits is leftower digit from sanitated door
+    // as might still be after last replace from xYx cases
+    if (sanitated[sanitated.length-2] == ' ') {
+      sanitated = sanitated.replace(/.$/, '');
+    }
+
+    // empty spaces from end
+    sanitated = sanitated.replace(/\s+$/g, '');
+
+    // add enter
+    //sanitated += '\n'
+
+    return sanitated;
+  });
+  console.log('value 0', fixed[0]);
+  console.log('value 1', fixed[1]);
+  return fixed.join('\n');
+}
 
   // receiveInputs inputted data
   const receiveInput = (e) => {
@@ -248,6 +336,17 @@ function App() {
               )
             })
           }
+
+          {/* here you can sanitate streetnames */}
+          <Inputs
+            mode= "streets"
+            receiveStreets= {receiveStreets}
+          />
+          <button onClick= {sanitateStreetsOfStreetData}>
+              tämän kentän osoitteet muotoon "kadunnimi"
+            </button>
+
+          {sanitatedStreets}
         </div>
 
 

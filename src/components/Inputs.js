@@ -1,8 +1,9 @@
 import { React } from 'react';
 import Texts from './Texts';
 import Radios from './Radios';
+import Streets from './Streets';
 
-function Inputs( {receiveInput, mode, format, setFormat} ) {
+function Inputs( {receiveInput, mode, format, setFormat, receiveStreets} ) {
 
   if (mode === "texts") {
     return(
@@ -29,6 +30,18 @@ function Inputs( {receiveInput, mode, format, setFormat} ) {
     );
   }
 
+  else if (mode === 'streets') {
+    return(
+      <div>
+
+        <Streets
+          receiveInput= {receiveStreets}
+          format= {format}
+        />
+
+       </div>
+    );
+  }
   else {
 
     return null;
