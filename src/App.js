@@ -342,10 +342,11 @@ const sanitateStreetsOfStreetData = (values) => {
             mode= "streets"
             receiveStreets= {receiveStreets}
           />
+          {/* button is not needed, as this comes onChange 
           <button onClick= {sanitateStreetsOfStreetData}>
               tämän kentän osoitteet muotoon "kadunnimi"
             </button>
-
+          */}
           {sanitatedStreets}
         </div>
 
