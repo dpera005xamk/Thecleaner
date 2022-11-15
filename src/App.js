@@ -134,64 +134,92 @@ function App() {
     navigator.clipboard.writeText(csvData);
   }
 
-  // receiveStreets
+  // receiveStreets, this for normal sanitation
   const receiveStreets = (e) => {
     e.preventDefault();
     const inputs = e.target.value;
     setStreetdata(e.target.value)
     const splitted = inputs.split(/\r?\n/);
-    console.log('splitted ', splitted);
-    //console.log('streetData: ', streetData);
+
     const getSanitated = sanitateStreetsOfStreetData(splitted);
     navigator.clipboard.writeText(getSanitated);
     setSanitatedStreets(getSanitated)
-  //  console.log('type: ', typeof(inputs));
 
   }
 
-const sanitateStreetsOfStreetData = (values) => {
-    console.log('streetdata found', values);
-    //console.log('streetData ', streetData );
-    /*
-    var str = values;
-    var i = 0;
-    for (;i < str.length; i++) {
-      if (str[i] === '\n' || str[i] === '\r') {
-        console.log('found enter key')
-      };
-    };
-    */
-  console.log('values 0 ', values[0]);
-  console.log('values 1 ', values[1]);
-    /*
-    const fixed = values.foreach((item, i) => {
-      item.replace(
-        // replace numbers
-        /[0-9]/g, ''
-      ).replace(
-        // any single digit
-        /\s.\s/g, ''
-      ).replace(
-        // if last digits is leftower digit from sanitated door
-        // as might still be after last replace from xYx cases
-        /.$/, ''
-      )
-    });
-    */
-    /*
-    const fixed = values.replace(
-      // replace numbers
-      /[0-9]/g, ''
-    ).replace(
-      // any single digit
-      /\s.\s/g, ''
-    ).replace(
+  // receiveStreets, this for decode numbers
+  const receiveStreetsForDecode = (e) => {
+    e.preventDefault();
+    const inputs = e.target.value;
+    setStreetdata(e.target.value)
+    const splitted = inputs.split(/\r?\n/);
+
+    const getSanitated = decodeNumbers(splitted);
+    navigator.clipboard.writeText(getSanitated);
+    setSanitatedStreets(getSanitated)
+
+  }
+
+  const decodeNumbers = (values) => {
+
+    const fixed = values.map( (entry, i) => {
+      const alphabet = [...'aklsdfjödsfjölajsdfkjfjajskldfjaslöjklasödfjöadsfjödsafkjkasdöjöadfksjöasfkjajksdföjakfd'];
+      let decodedStreetNumber = 'placeholder';
+      const numberLocations = [];
+      const actualNumbers = []
+
+      // check where are the numbers
+      for (let i = 0; i < entry.length; i++) {
+        if (/^\d+$/.test(entry[i])) {
+          numberLocations.push(i)
+          actualNumbers.push(entry[i]);
+        }
+
+      }
+
+      // check maybe if next to that is number too
+      if (numberLocations.length === 1) {
+        decodedStreetNumber = alphabet[entry.length] + alphabet[actualNumbers[0]]
+      } else {
+        // remove numbers that are door numbers
+        if (numberLocations.length === 2) {
+          if ((numberLocations[1] - numberLocations[0]) > 1) {
+            numberLocations.pop();
+            actualNumbers.pop();
+            // tähän vielä, että placeholder replacetaan... jatka tästä
+          }
+        }
+
+      }
+
+      console.log('decoded street number: ', decodedStreetNumber);
+      console.log('nL and aN ', numberLocations, actualNumbers);
+      // all numbers,
+      let sanitated = entry.replace(/[0-9]/g, '');
+
+      // any single digit left there
+      sanitated = sanitated.replace(/\s.\s/g, '');
+
       // if last digits is leftower digit from sanitated door
       // as might still be after last replace from xYx cases
-      /.$/, ''
-    )
-    ;
-*/
+      if (sanitated[sanitated.length-2] == ' ') {
+        sanitated = sanitated.replace(/.$/, '');
+      }
+
+      // empty spaces from end
+      sanitated = sanitated.replace(/\s+$/g, '');
+
+      // add enter
+      //sanitated += '\n'
+
+      return sanitated;
+    });
+
+    return fixed.join('\n');
+  }
+
+const sanitateStreetsOfStreetData = (values) => {
+
   const fixed = values.map( (entry, i) => {
 
     // all numbers,
@@ -214,8 +242,7 @@ const sanitateStreetsOfStreetData = (values) => {
 
     return sanitated;
   });
-  console.log('value 0', fixed[0]);
-  console.log('value 1', fixed[1]);
+
   return fixed.join('\n');
 }
 
@@ -342,7 +369,19 @@ const sanitateStreetsOfStreetData = (values) => {
             mode= "streets"
             receiveStreets= {receiveStreets}
           />
-          {/* button is not needed, as this comes onChange 
+          {/* button is not needed, as this comes onChange
+          <button onClick= {sanitateStreetsOfStreetData}>
+              tämän kentän osoitteet muotoon "kadunnimi"
+            </button>
+          */}
+          {sanitatedStreets}
+
+          {/* this is for Olas case where streets are like "decoded" */}
+          <Inputs
+            mode= "decodedStreets"
+            receiveStreets= {receiveStreetsForDecode}
+          />
+          {/* button is not needed, as this comes onChange
           <button onClick= {sanitateStreetsOfStreetData}>
               tämän kentän osoitteet muotoon "kadunnimi"
             </button>

@@ -2,6 +2,7 @@ import { React } from 'react';
 import Texts from './Texts';
 import Radios from './Radios';
 import Streets from './Streets';
+import DecodedStreets from './DecodedStreets';
 
 function Inputs( {receiveInput, mode, format, setFormat, receiveStreets} ) {
 
@@ -29,7 +30,7 @@ function Inputs( {receiveInput, mode, format, setFormat, receiveStreets} ) {
        </div>
     );
   }
-
+  /* this is for the street name sanitation */
   else if (mode === 'streets') {
     return(
       <div>
@@ -42,6 +43,22 @@ function Inputs( {receiveInput, mode, format, setFormat, receiveStreets} ) {
        </div>
     );
   }
+
+  /* this is for olas case where streets will get "decoded" end */
+  else if (mode === 'decodedStreets') {
+    return(
+      <div>
+
+        <DecodedStreets
+          receiveInput= {receiveStreets}
+          format= {format}
+        />
+
+       </div>
+    );
+  }
+
+
   else {
 
     return null;
