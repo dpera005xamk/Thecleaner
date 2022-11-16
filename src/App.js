@@ -163,7 +163,7 @@ function App() {
   const decodeNumbers = (values) => {
 
     const fixed = values.map( (entry, i) => {
-      const alphabet = [...'aklsdfjödsfjölajsdfkjfjajskldfjaslöjklasödfjöadsfjödsafkjkasdöjöadfksjöasfkjajksdföjakfd'];
+      const alphabet = [...'aklsdfjödsfjölajsdfkjfjajskldfjaslöjklasödfjöadsfjödsafkjkasdöjöadfksjöasfkjajksdföjakfdabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrabcdefghijklmnopqersty'];
       let decodedStreetNumber = 'placeholder';
       const numberLocations = [];
       const actualNumbers = []
@@ -186,14 +186,31 @@ function App() {
           if ((numberLocations[1] - numberLocations[0]) > 1) {
             numberLocations.pop();
             actualNumbers.pop();
-            // tähän vielä, että placeholder replacetaan... jatka tästä
+            decodedStreetNumber = alphabet[entry.length] + alphabet[actualNumbers[0]]
+          } else {
+            decodedStreetNumber = alphabet[entry.length] + alphabet[actualNumbers[0]] + alphabet[actualNumbers[1]]
           }
+        }
+        // in case of more than two numbers
+        if (numberLocations.length > 2) {
+          // check that there are no apartment numbers
+          while ((numberLocations[numberLocations.length-1] - numberLocations[0]) > numberLocations.length-1) {
+            // pop if there are
+            numberLocations.pop();
+            actualNumbers.pop();
+          }
+          // add decoded
+          decodedStreetNumber = alphabet[entry.length];
+          actualNumbers.forEach((item, i) => {
+            decodedStreetNumber += alphabet[i]
+          });
+
         }
 
       }
 
-      console.log('decoded street number: ', decodedStreetNumber);
-      console.log('nL and aN ', numberLocations, actualNumbers);
+      //console.log('decoded street number: ', decodedStreetNumber);
+      //console.log('nL and aN ', numberLocations, actualNumbers);
       // all numbers,
       let sanitated = entry.replace(/[0-9]/g, '');
 
@@ -208,6 +225,9 @@ function App() {
 
       // empty spaces from end
       sanitated = sanitated.replace(/\s+$/g, '');
+
+      // add decoded piece
+      sanitated = `${sanitated} (${decodedStreetNumber})`
 
       // add enter
       //sanitated += '\n'
