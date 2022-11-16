@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Inputs from './components/Inputs';
 import Fields from './components/Fields';
 import Element from './components/Element';
+import { decodeNumbers, sanitateStreetsOfStreetData } from './functions/functions'
 
 function App() {
   const [rawData, setRawData] = useState('');
@@ -86,8 +87,6 @@ function App() {
   // to only streetname + first number
   // https://www.w3schools.com/jsref/jsref_obj_regexp.asp
   const sanitateToNameNumber = () => {
-
-
     // if buildingType === Kerrostalo
     // then should leave the street number
     // in other cases, remove all numbers
@@ -117,6 +116,7 @@ function App() {
   }
 
   // stringify the rawData and add to clipBoard
+
   const toClipBoardJson = () => {
   // navigator.clipboard.writeText(copyText.value);
     navigator.clipboard.writeText(JSON.stringify(rawData));
@@ -134,7 +134,7 @@ function App() {
     navigator.clipboard.writeText(csvData);
   }
 
-  // receiveStreets, this for normal sanitation
+  // receiveStreets, this for normal sanitation, that deletes numbers
   const receiveStreets = (e) => {
     e.preventDefault();
     const inputs = e.target.value;
@@ -147,7 +147,8 @@ function App() {
 
   }
 
-  // receiveStreets, this for decode numbers
+  // receiveStreets, this for decode numbers, when customer wants to identification
+  // of which are from the same building
   const receiveStreetsForDecode = (e) => {
     e.preventDefault();
     const inputs = e.target.value;
@@ -159,112 +160,6 @@ function App() {
     setSanitatedStreets(getSanitated)
 
   }
-
-  const decodeNumbers = (values) => {
-
-    const fixed = values.map( (entry, i) => {
-      const alphabet = [...'aklsdfjödsfjölajsdfkjfjajskldfjaslöjklasödfjöadsfjödsafkjkasdöjöadfksjöasfkjajksdföjakfdabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrabcdefghijklmnopqersty'];
-      let decodedStreetNumber = 'placeholder';
-      const numberLocations = [];
-      const actualNumbers = []
-
-      // check where are the numbers
-      for (let i = 0; i < entry.length; i++) {
-        if (/^\d+$/.test(entry[i])) {
-          numberLocations.push(i)
-          actualNumbers.push(entry[i]);
-        }
-
-      }
-
-      // check maybe if next to that is number too
-      if (numberLocations.length === 1) {
-        decodedStreetNumber = alphabet[entry.length] + alphabet[actualNumbers[0]]
-      } else {
-        // remove numbers that are door numbers
-        if (numberLocations.length === 2) {
-          if ((numberLocations[1] - numberLocations[0]) > 1) {
-            numberLocations.pop();
-            actualNumbers.pop();
-            decodedStreetNumber = alphabet[entry.length] + alphabet[actualNumbers[0]]
-          } else {
-            decodedStreetNumber = alphabet[entry.length] + alphabet[actualNumbers[0]] + alphabet[actualNumbers[1]]
-          }
-        }
-        // in case of more than two numbers
-        if (numberLocations.length > 2) {
-          // check that there are no apartment numbers
-          while ((numberLocations[numberLocations.length-1] - numberLocations[0]) > numberLocations.length-1) {
-            // pop if there are
-            numberLocations.pop();
-            actualNumbers.pop();
-          }
-          // add decoded
-          decodedStreetNumber = alphabet[entry.length];
-          actualNumbers.forEach((item, i) => {
-            decodedStreetNumber += alphabet[i]
-          });
-
-        }
-
-      }
-
-      //console.log('decoded street number: ', decodedStreetNumber);
-      //console.log('nL and aN ', numberLocations, actualNumbers);
-      // all numbers,
-      let sanitated = entry.replace(/[0-9]/g, '');
-
-      // any single digit left there
-      sanitated = sanitated.replace(/\s.\s/g, '');
-
-      // if last digits is leftower digit from sanitated door
-      // as might still be after last replace from xYx cases
-      if (sanitated[sanitated.length-2] == ' ') {
-        sanitated = sanitated.replace(/.$/, '');
-      }
-
-      // empty spaces from end
-      sanitated = sanitated.replace(/\s+$/g, '');
-
-      // add decoded piece
-      sanitated = `${sanitated} (${decodedStreetNumber})`
-
-      // add enter
-      //sanitated += '\n'
-
-      return sanitated;
-    });
-
-    return fixed.join('\n');
-  }
-
-const sanitateStreetsOfStreetData = (values) => {
-
-  const fixed = values.map( (entry, i) => {
-
-    // all numbers,
-    let sanitated = entry.replace(/[0-9]/g, '');
-
-    // any single digit left there
-    sanitated = sanitated.replace(/\s.\s/g, '');
-
-    // if last digits is leftower digit from sanitated door
-    // as might still be after last replace from xYx cases
-    if (sanitated[sanitated.length-2] == ' ') {
-      sanitated = sanitated.replace(/.$/, '');
-    }
-
-    // empty spaces from end
-    sanitated = sanitated.replace(/\s+$/g, '');
-
-    // add enter
-    //sanitated += '\n'
-
-    return sanitated;
-  });
-
-  return fixed.join('\n');
-}
 
   // receiveInputs inputted data
   const receiveInput = (e) => {
