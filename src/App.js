@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Inputs from './components/Inputs';
 import Fields from './components/Fields';
 import Element from './components/Element';
-import { decodeNumbers, sanitateStreetsOfStreetData } from './functions/functions'
+import { decodeNumbers, sanitateStreetsOfStreetData, receiveJustDecoded } from './functions/functions'
 
 function App() {
   const [rawData, setRawData] = useState('');
@@ -161,6 +161,19 @@ function App() {
 
   }
 
+  // this is for that function that returns only decoded stings
+  const receiveStreetsForGetNumbers = (e) => {
+    e.preventDefault();
+    const inputs = e.target.value;
+    setStreetdata(e.target.value)
+    const splitted = inputs.split(/\r?\n/);
+
+    const getSanitated = receiveJustDecoded(splitted);
+    navigator.clipboard.writeText(getSanitated);
+    setSanitatedStreets(getSanitated)
+
+  }
+
   // receiveInputs inputted data
   const receiveInput = (e) => {
     e.preventDefault();
@@ -302,6 +315,17 @@ function App() {
             </button>
           */}
           {sanitatedStreets}
+
+          {/* this is that returns only those coded numbers */}
+          <Inputs
+            mode= "codedNumbers"
+            receiveStreets= {receiveStreetsForGetNumbers}
+          />
+          {/* button is not needed, as this comes onChange
+          <button onClick= {sanitateStreetsOfStreetData}>
+              tämän kentän osoitteet muotoon "kadunnimi"
+            </button>
+          */}
         </div>
 
 

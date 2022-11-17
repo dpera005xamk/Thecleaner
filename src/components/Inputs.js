@@ -3,6 +3,7 @@ import Texts from './Texts';
 import Radios from './Radios';
 import Streets from './Streets';
 import DecodedStreets from './DecodedStreets';
+import CodedStreets from './CodedStreets';
 
 function Inputs( {receiveInput, mode, format, setFormat, receiveStreets} ) {
 
@@ -58,6 +59,19 @@ function Inputs( {receiveInput, mode, format, setFormat, receiveStreets} ) {
     );
   }
 
+  /* this is returns only coded characters of street numbers */
+  else if (mode === 'codedNumbers') {
+    return(
+      <div>
+
+        <DecodedStreets
+          receiveInput= {receiveStreets}
+          format= {format}
+        />
+
+       </div>
+    );
+  }
 
   else {
 
