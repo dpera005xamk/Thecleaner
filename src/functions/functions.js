@@ -1,3 +1,4 @@
+// this takes away the street numbers and replaces them with decoded entries
 export const decodeNumbers = (values) => {
   const fixed = values.map( (entry, i) => {
     const alphabet = [...'a1b2c3d4e5f6g7h8i9jklmnopqrstuwxyzabcdefghijklmnopqrstuvw4z567y8z9'];
@@ -60,7 +61,7 @@ export const decodeNumbers = (values) => {
     //console.log('i: ', includes);
     // KaanaankatuD
     // add decoded piece
-    if (decodedStreetNumber != 'placeholder') {
+    if (decodedStreetNumber !== 'placeholder') {
       sanitated = `${sanitated} (${decodedStreetNumber})`
       //console.log('after fifth ', sanitated);
     }
@@ -71,6 +72,7 @@ export const decodeNumbers = (values) => {
   return fixed.join('\n');
 }
 
+// this takes away the whole street number
 export const sanitateStreetsOfStreetData = (values) => {
 
   const fixed = values.map( (entry, i) => {
@@ -177,9 +179,59 @@ export const receiveJustDecoded = (values) => {
     //console.log('i: ', includes);
     // KaanaankatuD
     // add decoded piece
-    if (decodedStreetNumber != 'placeholder') {
+    if (decodedStreetNumber !== 'placeholder') {
       sanitated = decodedStreetNumber;
       //console.log('after fifth ', sanitated);
+    }
+
+    return sanitated;
+  });
+
+  return fixed.join('\n');
+}
+
+// this returns street and number, like kopparinkatu 2, can be used with flats
+export const returnStreetAndNumber = (values) => {
+  console.log('rns');
+  const fixed = values.map( (entry, i) => {
+    const numberLocations = [];
+    let streetNameLength = 0;
+    let breakPoint = null;
+    let sanitated = undefined;
+
+    // check where are the numbers
+    for (let i = 0; i < entry.length; i++) {
+      if (/^\d+$/.test(entry[i])) {
+        numberLocations.push(i)
+      }
+    }
+
+    //console.log('numberLocs ', numberLocations);
+
+    // determine length of the street name
+    streetNameLength = numberLocations[0];
+
+    // remove alphabetic and all after that
+
+  
+    console.log('entry: ', entry);
+
+    // check where is a alpabetic
+    for (let i = streetNameLength; i < entry.length; i++) {
+      const regex = /^[a-zA-Z]+$/;
+      if (entry[i].match(regex)) {
+        //console.log('aspha löyty', entry[i]);
+        if (breakPoint === null) {
+          breakPoint = i;
+        }
+      }
+    }
+
+    // cut everything after number/numbers
+    if (breakPoint === null) {
+      sanitated = entry.slice(0, numberLocations[numberLocations.length-1]+1);
+    } else {
+      sanitated = entry.slice(0, breakPoint);
     }
 
     return sanitated;

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Inputs from './components/Inputs';
 import Fields from './components/Fields';
 import Element from './components/Element';
-import { decodeNumbers, sanitateStreetsOfStreetData, receiveJustDecoded } from './functions/functions'
+import { decodeNumbers, sanitateStreetsOfStreetData, receiveJustDecoded, returnStreetAndNumber } from './functions/functions'
 
 function App() {
   const [rawData, setRawData] = useState('');
@@ -54,6 +54,7 @@ function App() {
   }, [elements]);
 
   // sanitate the street address
+  // this is used by those buttons. NOT fields!
   // to only street name (removes numbers and door indicators)
   // third so that handles Kerrostalo, Rivitalo, Omakotitalo differently
   // other values: Erillistalo, Paritalo, Puutalo-osake, Muu
@@ -84,6 +85,7 @@ function App() {
   };
 
   // sanitate the street address
+  // this is used by those buttons. NOT fields!
   // to only streetname + first number
   // https://www.w3schools.com/jsref/jsref_obj_regexp.asp
   const sanitateToNameNumber = () => {
@@ -147,7 +149,20 @@ function App() {
 
   }
 
-  // receiveStreets, this for decode numbers, when customer wants to identification
+  // this leaves streets number
+  const receiveStreetsLeaveNumbers = (e) => {
+    e.preventDefault();
+    const inputs = e.target.value;
+    setStreetdata(e.target.value)
+    const splitted = inputs.split(/\r?\n/);
+
+    const getSanitated = returnStreetAndNumber(splitted);
+    navigator.clipboard.writeText(getSanitated);
+    setSanitatedStreets(getSanitated)
+
+  }
+
+  // this for decode numbers, when customer wants to identification
   // of which are from the same building
   const receiveStreetsForDecode = (e) => {
     e.preventDefault();
@@ -161,7 +176,7 @@ function App() {
 
   }
 
-  // this is for that function that returns only decoded stings
+  // this is for that function that returns only decoded strings
   const receiveStreetsForGetNumbers = (e) => {
     e.preventDefault();
     const inputs = e.target.value;
@@ -292,7 +307,8 @@ function App() {
             })
           }
 
-          {/* here you can sanitate streetnames */}
+          {/* here you can sanitate streetnames, they will have no number at all */}
+          <p style= {{color: "green"}}> tämä poistaa kadun numeron:</p>
           <Inputs
             mode= "streets"
             receiveStreets= {receiveStreets}
@@ -305,6 +321,7 @@ function App() {
           {sanitatedStreets}
 
           {/* this is for Olas case where streets are like "decoded" */}
+          <p style= {{color: "green"}}> tämä decoodaa kadun numeron, esim: Suurpellon puistokatu  (n4):</p>
           <Inputs
             mode= "decodedStreets"
             receiveStreets= {receiveStreetsForDecode}
@@ -314,9 +331,9 @@ function App() {
               tämän kentän osoitteet muotoon "kadunnimi"
             </button>
           */}
-          {sanitatedStreets}
 
           {/* this is that returns only those coded numbers */}
+          <p style= {{color: "green"}}> tämä decoodaa kadun numeron ja palauttaa sen... taisin jotain testata tällä:  (n4):</p>
           <Inputs
             mode= "codedNumbers"
             receiveStreets= {receiveStreetsForGetNumbers}
@@ -326,6 +343,13 @@ function App() {
               tämän kentän osoitteet muotoon "kadunnimi"
             </button>
           */}
+
+          {/* this is to leave street number */}
+          <p style= {{color: "green"}}> tämä jättää kadun numeron, mutta poistaa portaan:</p>
+          <Inputs
+            mode= "decodedStreets"
+            receiveStreets= {receiveStreetsLeaveNumbers}
+          />
         </div>
 
 

@@ -6,8 +6,7 @@ function Streets( {receiveInput} ) {
     <div>
 
       <p>
-        Syötä tähän kadun nimet. Kun ne on kopioitu excelistä, niin ei tarvitse tehdä mitään, niistä tulee valmiit versiot
-        leikkauspöydälle, eli sitten vain liität esim, control+v niiden vanhojen päälle exceliin
+      kopioi tähän, saat ne clipboardille valmiina
       </p>
 
       <textarea id= "jsonInput"

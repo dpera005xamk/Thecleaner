@@ -6,7 +6,7 @@ function Streets( {receiveInput} ) {
     <div>
 
       <p>
-        Tämä "decodaa" katujen numerot. ja palauttaa vain ne
+        kopioi tähän, saat ne clipboardille valmiina
       </p>
 
       <textarea id= "jsonInput"
